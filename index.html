@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>For Babajani & Mamma</title>
+
+  <!-- Google Fonts — Playfair Display for headings, Cormorant for body -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============================================
+       CSS VARIABLES — Our design system
+       
+       Why: Keeps colors consistent everywhere.
+       Change one value here = changes the whole site.
+       
+       Color story: Deep greens (Kashmir valleys) + 
+       Gold (honor, warmth) + Cream (softness, paper)
+    ============================================ */
+    :root {
+      --gold: #c9a84c;
+      --gold-light: #e8d5a0;
+      --deep-green: #1a3a2a;
+      --forest: #2d5a3d;
+      --cream: #f5f0e8;
+      --warm-white: #faf7f2;
+      --ink: #0d0d0d;
+      --soft-brown: #8b7355;
+    }
+
+    /* ============================================
+       RESET & BASE
+       
+       Why: Browsers add default margins/padding 
+       that mess up layouts. This removes them.
+    ============================================ */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth; /* smooth scrolling between sections */
+    }
+
+    body {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      background: var(--ink);
+      color: var(--cream);
+      overflow-x: hidden; /* prevents horizontal scroll from animations */
+    }
+
+    /* ============================================
+       SECTION 1: HERO — The Cinematic Opener
+       
+       Full viewport height. Dark green gradient 
+       inspired by Kashmir's forests. Gold text 
+       fades in with staggered timing.
+    ============================================ */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      text-align: center;
+      padding: 2rem;
+
+      /* Multi-stop gradient = depth, not flat color */
+      background: linear-gradient(
+        180deg,
+        #070f0a 0%,      /* near-black at top */
+        #1a3a2a 40%,     /* deep forest green */
+        #2d5a3d 65%,     /* lighter green */
+        #1a3a2a 100%     /* back to dark */
+      );
+      overflow: hidden;
+    }
+
+    /* Subtle radial light — like moonlight through trees */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 40%, rgba(201,168,76,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 60%, rgba(201,168,76,0.05) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* ---- Floating gold particles ---- 
+       Creates that magical/emotional atmosphere.
+       Each particle is a tiny gold dot that floats upward.
+    */
+    .particles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: var(--gold);
+      border-radius: 50%;
+      opacity: 0;
+      animation: floatUp 8s infinite;
+    }
+
+    @keyframes floatUp {
+      0%   { opacity: 0; transform: translateY(100vh) scale(0); }
+      10%  { opacity: 0.6; }
+      90%  { opacity: 0.1; }
+      100% { opacity: 0; transform: translateY(-10vh) scale(1); }
+    }
+
+    /* ---- Hero text elements ---- */
+    .hero-dedication {
+      font-size: clamp(0.85rem, 2vw, 1.1rem);
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0;
+      animation: fadeIn 2s 0.5s forwards;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.8rem, 9vw, 7rem);
+      font-weight: 900;
+      line-height: 1.05;
+      color: var(--cream);
+      opacity: 0;
+      animation: fadeInUp 1.8s 1.2s forwards;
+      max-width: 850px;
+    }
+
+    .hero-title .gold {
+      color: var(--gold);
+      display: block;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--gold-light);
+      margin-top: 1.5rem;
+      opacity: 0;
+      animation: fadeInUp 1.5s 2.2s forwards;
+      letter-spacing: 2px;
+    }
+
+    .hero-line {
+      width: 60px;
+      height: 1px;
+      background: var(--gold);
+      margin: 2rem auto 0;
+      opacity: 0;
+      animation: fadeIn 1.5s 3s forwards, expandLine 2s 3s forwards;
+    }
+
+    /* Scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      animation: fadeIn 1s 4s forwards;
+    }
+
+    .scroll-hint p {
+      font-size: 0.7rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 0.5rem;
+    }
+
+    .scroll-arrow {
+      width: 1px;
+      height: 35px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      margin: 0 auto;
+      animation: pulse 2s 4.5s infinite;
+    }
+
+    /* ============================================
+       ANIMATIONS
+    ============================================ */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes expandLine {
+      from { width: 0; }
+      to   { width: 60px; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.3; }
+      50%      { opacity: 1; }
+    }
+
+    /* ============================================
+       SCROLL REVEAL — Elements fade in as you 
+       scroll down. Applied via JS later.
+    ============================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ============================================
+       SECTION 2: THE LETTER — Premium Redesign
+
+       Features: glowing ambient light behind the
+       letter, decorative gold frames, pull-quote
+       styling, and much richer typography.
+    ============================================ */
+    .letter {
+      background: var(--ink);
+      padding: 10rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Ambient glow — warm gold light behind the letter */
+    .letter-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(
+        circle,
+        rgba(201, 168, 76, 0.06) 0%,
+        rgba(201, 168, 76, 0.02) 40%,
+        transparent 70%
+      );
+      pointer-events: none;
+    }
+
+    .letter-inner {
+      max-width: 720px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* ---- Decorative gold frame lines ---- */
+    .letter-frame-top,
+    .letter-frame-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .letter-frame-bottom {
+      margin-bottom: 0;
+      margin-top: 3rem;
+    }
+
+    .letter-frame-top span:nth-child(1),
+    .letter-frame-top span:nth-child(3),
+    .letter-frame-bottom span:nth-child(1),
+    .letter-frame-bottom span:nth-child(3) {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        var(--gold),
+        transparent
+      );
+    }
+
+    .letter-frame-top span:nth-child(2),
+    .letter-frame-bottom span:nth-child(2) {
+      width: 8px;
+      height: 8px;
+      border: 1px solid var(--gold);
+      transform: rotate(45deg);
+    }
+
+    /* ---- Heading ---- */
+    .letter-heading {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2rem, 5.5vw, 3.2rem);
+      font-weight: 700;
+      text-align: center;
+      color: var(--cream);
+      margin-bottom: 3.5rem;
+      line-height: 1.3;
+    }
+
+    /* ---- Body paragraphs ---- */
+    .letter-body p {
+      font-size: clamp(1.08rem, 2.2vw, 1.22rem);
+      line-height: 2;
+      color: rgba(232, 213, 160, 0.85);
+      margin-bottom: 2rem;
+    }
+
+    .letter-greeting {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.4rem, 3vw, 1.7rem) !important;
+      font-style: italic;
+      color: var(--gold) !important;
+      margin-bottom: 2.5rem !important;
+    }
+
+    .letter-body strong {
+      color: var(--cream);
+      font-weight: 600;
+    }
+
+    .letter-body em {
+      color: var(--gold);
+      font-style: italic;
+    }
+
+    /* ---- Highlight paragraph — "But you said try again" ----
+       This is the emotional peak. Pulled out visually
+       with a left gold border like a blockquote.
+    */
+    .highlight-para {
+      border-left: 2px solid var(--gold);
+      padding-left: 1.5rem;
+      margin: 3rem 0 !important;
+      font-size: clamp(1.3rem, 3vw, 1.5rem) !important;
+      color: var(--cream) !important;
+      line-height: 1.8 !important;
+    }
+
+    /* ---- Promise paragraph ---- */
+    .promise {
+      text-align: center;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.3rem, 3vw, 1.6rem) !important;
+      color: var(--cream) !important;
+      margin-top: 3rem !important;
+      line-height: 1.7 !important;
+    }
+
+    .gold-text {
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    /* ---- Signature ---- */
+    .letter-sign {
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    .letter-sign p {
+      font-style: italic;
+      color: var(--gold) !important;
+      font-size: 1.15rem;
+      margin-bottom: 0.5rem !important;
+    }
+
+    .letter-name {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.8rem !important;
+      font-weight: 700;
+      font-style: normal;
+      color: var(--cream) !important;
+    }
+
+    /* ============================================
+       RESPONSIVE — Phone screens
+
+       @media (max-width: 768px) means "apply these
+       styles ONLY when screen is 768px or smaller"
+       i.e. tablets and phones
+    ============================================ */
+    @media (max-width: 768px) {
+      .hero {
+        padding: 2rem 1.5rem;
+      }
+
+      .letter {
+        padding: 5rem 1.5rem;
+      }
+
+      .letter-heading {
+        font-size: 1.8rem;
+      }
+
+      .letter-body p {
+        font-size: 1.05rem;
+        line-height: 1.85;
+      }
+
+      .highlight-para {
+        font-size: 1.2rem !important;
+        padding-left: 1rem;
+      }
+
+      .hero-dedication {
+        letter-spacing: 3px;
+        font-size: 0.75rem;
+      }
+
+      .scroll-hint {
+        bottom: 1.5rem;
+      }
+    }
+
+    /* Extra small phones (iPhone SE etc) */
+    @media (max-width: 380px) {
+      .hero-title {
+        font-size: 2.4rem;
+      }
+
+      .letter-body p {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ==========================================
+       SECTION 1: HERO
+  ========================================== -->
+  <section class="hero">
+
+    <!-- Particles — JS will generate these -->
+    <div class="particles" id="particles"></div>
+
+    <p class="hero-dedication">A tribute from your son</p>
+
+    <h1 class="hero-title">
+      For <span class="gold">Babajani</span>
+      & <span class="gold">Mamma</span>
+    </h1>
+
+    <p class="hero-subtitle">Everything I am, is because of you.</p>
+
+    <div class="hero-line"></div>
+
+    <div class="scroll-hint">
+      <p>Scroll</p>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       SECTION 2: THE LETTER — Redesigned
+
+       Now features a glowing border, decorative
+       elements, and a much richer visual treatment.
+  ========================================== -->
+  <section class="letter">
+
+    <!-- Decorative background glow -->
+    <div class="letter-glow"></div>
+
+    <div class="letter-inner">
+
+      <!-- Decorative top border -->
+      <div class="letter-frame-top reveal">
+        <span></span><span></span><span></span>
+      </div>
+
+      <h2 class="letter-heading reveal">A Letter I Should Have<br>Written Long Ago</h2>
+
+      <div class="letter-body">
+
+        <p class="letter-greeting reveal">Dear Babajani & Mamma,</p>
+
+        <p class="reveal">
+          There are things a son carries quietly — gratitude so heavy
+          it sits in his chest like a second heartbeat. I have been
+          carrying mine across 4,000 miles, through two countries,
+          through a failure that should have ended everything — and I
+          never once put it into words. Until now.
+        </p>
+
+        <p class="reveal">
+          You didn't just send me to the UK. You sent me your
+          <em>trust</em> — wrapped in every tuition payment, folded
+          into every rent transfer, hidden inside every phone call
+          where you said <strong>"don't worry about the money."</strong>
+          But I know what that money costs. I know the weight of it.
+          And I know you carried it so I wouldn't have to.
+        </p>
+
+        <p class="reveal">
+          When I failed my first year, I couldn't sleep for days. I
+          stared at my phone, rehearsing apologies that would never
+          be enough. I thought you'd say come home. I thought the
+          dream was over.
+        </p>
+
+        <p class="reveal highlight-para">
+          But you said <strong>"try again."</strong><br>
+          Two words. And they rebuilt me.
+        </p>
+
+        <p class="reveal">
+          Most parents would have called it enough. Most parents
+          would have been right to. But you — you chose me again.
+          Not because I earned it. Because you loved me more than
+          my mistakes.
+        </p>
+
+        <p class="reveal">
+          I live in the city centre of Birmingham. I know what that
+          costs you. I know you chose my comfort over your own. Every
+          lecture I sit in, every morning I wake up here — that is
+          not my life. <strong>That is yours, given to me.</strong>
+        </p>
+
+        <p class="reveal">
+          So this is not just a thank you. This is a son telling his
+          parents: I see you. I see every sacrifice you thought I
+          didn't notice. I see it all. And I am going to spend the
+          rest of my life making sure it was worth it.
+        </p>
+
+        <p class="reveal promise">
+          I will make you proud.<br>
+          That is not a hope — <span class="gold-text">it is a promise.</span>
+        </p>
+
+        <div class="letter-sign reveal">
+          <p>With all my love, always,</p>
+          <p class="letter-name">Your Son</p>
+        </div>
+
+      </div>
+
+      <!-- Decorative bottom border -->
+      <div class="letter-frame-bottom reveal">
+        <span></span><span></span><span></span>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ==========================================
+       JS — Particle generator + Scroll reveal
+  ========================================== -->
+  <script>
+    // --- PARTICLE GENERATOR ---
+    // Creates 40 tiny gold dots at random positions
+    // with random delays so they don't all float at once
+    (function createParticles() {
+      const container = document.getElementById('particles');
+      for (let i = 0; i < 40; i++) {
+        const p = document.createElement('div');
+        p.classList.add('particle');
+        p.style.left = Math.random() * 100 + '%';
+        p.style.animationDelay = Math.random() * 8 + 's';
+        p.style.animationDuration = (6 + Math.random() * 4) + 's';
+        container.appendChild(p);
+      }
+    })();
+
+    // --- SCROLL REVEAL ---
+    // Uses IntersectionObserver (modern, performant)
+    // Any element with class "reveal" fades in when 
+    // 15% of it enters the viewport
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.15 });
+
+    // We'll observe elements after they exist (added in later steps)
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
